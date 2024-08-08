@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criador de VBScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f2f5;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+        #vbsCode {
+            width: 80%;
+            height: 300px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 10px;
+            background-image: url(a.png);
+            background-repeat: repeat;
+            background-attachment: fixed;
+            margin-bottom: 10px;
+            overflow: auto;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            font-size: 20px;
+            color: #333;
+            transition: border-color 0.3s;
+            user-select: text;
+            resize: vertical;
+        }
+        #vbsCode:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #container {
+            width: 80%;
+            max-width: 1200px;
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+            user-select: text;
+        }
+        .bounce {
+            animation: bounce 1s ease;
+        }
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        #charCount {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+        #warning {
+            display: none;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #d9534f;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .top-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <h1>Criador de VBScript</h1>
+        <textarea id="vbsCode" placeholder="Crie seu código VBS aqui..." oninput="updateBorderColor(); updateCharCount();" ondblclick="selectAllText()" onmousedown="handleTripleClick(event)"></textarea>
+        <div id="charCount">0 caracteres</div>
+        <div id="warning">Cuidado, isso pode prejudicar seu computador/celular/etc</div>
+        <div class="top-buttons">
+            <button onclick="clearText()">Limpar Texto</button>
+            <button id="downloadButton" onclick="downloadVBS()">Baixar VBScript</button>
+        </div>
+        <div>
+            <button onclick="generateInput()">Adicionar Campo de Entrada</button>
+            <button onclick="generateButton()">Adicionar Botão</button>
+            <button onclick="generateMessage()" title="0 - Nenhum botão. 1 - OK. 2 - OK e Cancelar. 3 - Sim, Não e Cancelar. 4 - Sim e Não. 5 - Abort, Retry e Ignore. Ícones: 16 - Ícone de erro. 32 - Ícone de aviso. 48 - Ícone de informações.">Adicionar Mensagem</button>
+            <button onclick="generateOpenSite()">Abrir Site</button>
+        </div>
+    </div>
+
+    <script>
+        let colorInterval;
+
+        function generateInput() {
+            const code = `Dim msg\nmsg = InputBox("Digite algo:")\nMsgBox "Você digitou: " & msg\n`;
+            appendToTextArea(code);
+        }
+
+        function generateButton() {
+            const code = `MsgBox "Clique OK para continuar."\n`;
+            appendToTextArea(code);
+        }
+
+        function generateMessage() {
+            const code = `x=msgbox("Digite um texto", 32+1, "Digite um nome")\n`;
+            appendToTextArea(code);
+        }
+
+        function generateOpenSite() {
+            const siteUrl = prompt("Digite a URL do site que deseja abrir (inclua http:// ou https://):");
+            if (siteUrl) {
+                const code = `Dim shell\nSet shell = CreateObject("WScript.Shell")\nshell.Run "${siteUrl}"\nSet shell = Nothing\n`;
+                appendToTextArea(code);
+            }
+        }
+
+        function appendToTextArea(code) {
+            const textArea = document.getElementById('vbsCode');
+            textArea.value += code;
+            updateBorderColor();
+            updateCharCount();
+        }
+
+        function clearText() {
+            document.getElementById('vbsCode').value = '';
+            updateBorderColor();
+            updateCharCount();
+            stopColorAnimation();
+            hideWarning();
+            document.body.style.backgroundColor = '#f0f2f5';
+        }
+
+        function updateBorderColor() {
+            const textArea = document.getElementById('vbsCode');
+            const length = textArea.value.length;
+            let color;
+
+            if (length <= 2000) {
+                const blueValue = 255;
+                const greenValue = Math.floor((255 * length) / 2000);
+                color = `rgb(0, ${greenValue}, ${blueValue})`;
+            } else if (length <= 3000) {
+                const greenValue = 255;
+                const redValue = Math.floor((255 * (length - 2000)) / 1000);
+                color = `rgb(${redValue}, ${greenValue}, ${255 - redValue})`;
+            } else if (length <= 4000) {
+                const redValue = 255;
+                const blueValue = Math.floor((255 * (length - 3000)) / 1000);
+                color = `rgb(${redValue}, 0, ${blueValue})`;
+            } else if (length <= 10000) {
+                const maxLength = 10000;
+                const hue = (length - 4000) * 360 / (maxLength - 4000);
+                color = `hsl(${hue}, 100%, 50%)`;
+                stopColorAnimation();
+                hideWarning();
+            } else if (length <= 1000000) {
+                startColorAnimation();
+                showWarning();
+                document.body.style.backgroundColor = '#f0f2f5';
+            } else {
+                document.body.style.backgroundColor = '#000';
+                stopColorAnimation();
+                showWarning();
+            }
+
+            textArea.style.borderColor = color;
+        }
+
+        function updateCharCount() {
+            const textArea = document.getElementById('vbsCode');
+            const length = textArea.value.length;
+            document.getElementById('charCount').textContent = `${length} caracteres`;
+        }
+
+        function selectAllText() {
+            const textArea = document.getElementById('vbsCode');
+            textArea.select();
+        }
+
+        function handleTripleClick(event) {
+            if (event.detail === 3) {
+                selectAllText();
+                event.preventDefault();
+            }
+        }
+
+        function startColorAnimation() {
+            const textArea = document.getElementById('vbsCode');
+            let hue = 0;
+
+            colorInterval = setInterval(() => {
+                hue = (hue + 10) % 360;
+                textArea.style.borderColor = `hsl(${hue}, 100%, 50%)`;
+            }, 500);
+        }
+
+        function stopColorAnimation() {
+            if (colorInterval) {
+                clearInterval(colorInterval);
+                colorInterval = null;
+            }
+        }
+
+        function showWarning() {
+            document.getElementById('warning').style.display = 'block';
+        }
+
+        function hideWarning() {
+            document.getElementById('warning').style.display = 'none';
+        }
+
+        function downloadVBS() {
+            const code = document.getElementById('vbsCode').value;
+            const fileName = prompt("Digite o nome do arquivo (com extensão .vbs):", "script.vbs");
+
+            if (fileName) {
+                const blob = new Blob([code], { type: 'text/vbscript' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+
+                const downloadButton = document.getElementById('downloadButton');
+                downloadButton.classList.add('bounce');
+
+                downloadButton.addEventListener('animationend', () => {
+                    downloadButton.classList.remove('bounce');
+                });
+
+                link.click();
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -23,7 +23,7 @@ if (isMobile()) {
 
     // Cria um texto dentro do overlay
     var text = document.createElement('div');
-    text.innerText = 'Essa versão não funciona para mobile :(';
+    text.innerText = 'Arquivo vbs não funciona nos dispositivos móveis :(';
     overlay.appendChild(text);
 
     // Adiciona o overlay ao corpo do documento

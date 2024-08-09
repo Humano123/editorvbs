@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criador de VBScript</title>
+    <title>Editor vbs</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -100,9 +100,8 @@
     </style>
 </head>
 <body>
-
     <div id="container">
-        <h1>Criador de VBScript</h1>
+        <h1>Editor VBS</h1>
         <textarea id="vbsCode" placeholder="Crie seu código VBS aqui..." oninput="updateBorderColor(); updateCharCount();" ondblclick="selectAllText()" onmousedown="handleTripleClick(event)"></textarea>
         <div id="charCount">0 caracteres</div>
         <div id="warning">Cuidado, isso pode prejudicar seu computador/celular/etc</div>
@@ -115,6 +114,7 @@
             <button onclick="generateButton()">Adicionar Botão</button>
             <button onclick="generateMessage()" title="0 - Nenhum botão. 1 - OK. 2 - OK e Cancelar. 3 - Sim, Não e Cancelar. 4 - Sim e Não. 5 - Abort, Retry e Ignore. Ícones: 16 - Ícone de erro. 32 - Ícone de aviso. 48 - Ícone de informações.">Adicionar Mensagem</button>
             <button onclick="generateOpenSite()">Abrir Site</button>
+            <button onclick="generateConditionalInput()">Adicionar Entrada Condicional</button>
         </div>
     </div>
 
@@ -142,6 +142,11 @@
                 const code = `Dim shell\nSet shell = CreateObject("WScript.Shell")\nshell.Run "${siteUrl}"\nSet shell = Nothing\n`;
                 appendToTextArea(code);
             }
+        }
+
+        function generateConditionalInput() {
+            const code = `Dim userInput\nuserInput = InputBox("Por favor, insira um texto:", "Entrada de Texto")\n\nIf userInput = "oi" Then\n    MsgBox "Olá"\nElse\n    MsgBox "Tchau"\nEnd If\n`;
+            appendToTextArea(code);
         }
 
         function appendToTextArea(code) {
@@ -241,9 +246,13 @@
 
         function downloadVBS() {
             const code = document.getElementById('vbsCode').value;
-            const fileName = prompt("Digite o nome do arquivo (com extensão .vbs):", "script.vbs");
+            let fileName = prompt("Coloque um nome para seu arquivo:", "ArquivoSemNome.vbs");
 
             if (fileName) {
+                if (!fileName.endsWith('.vbs')) {
+                    fileName += '.vbs';
+                }
+
                 const blob = new Blob([code], { type: 'text/vbscript' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
@@ -260,6 +269,6 @@
             }
         }
     </script>
-
+    <script type="module" src="aviso.js"></script>
 </body>
 </html>

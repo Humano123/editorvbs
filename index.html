@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor vbs</title>
+    <title>(DevTest) Editor vbs</title>
     <style>
+        /* Seu código CSS permanece o mesmo */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -123,6 +124,7 @@
             <button onclick="generateMessage()" title="0 - Nenhum botão. 1 - OK. 2 - OK e Cancelar. 3 - Sim, Não e Cancelar. 4 - Sim e Não. 5 - Abort, Retry e Ignore. Ícones: 16 - Ícone de erro. 32 - Ícone de aviso. 48 - Ícone de informações.">Adicionar Mensagem</button>
             <button onclick="generateOpenSite()">Abrir Site</button>
             <button onclick="generateConditionalInput()">Adicionar Entrada Condicional</button>
+            <button onclick="generateTextAuthorDelay()">Adicionar Texto com Autor e Atraso</button>
         </div>
     </div>
 
@@ -154,6 +156,11 @@
 
         function generateConditionalInput() {
             const code = `Dim userInput\nuserInput = InputBox("Por favor, insira um texto:", "Entrada de Texto")\n\nIf userInput = "oi" Then\n    MsgBox "Olá"\nElse\n    MsgBox "Tchau"\nEnd If\n`;
+            appendToTextArea(code);
+        }
+
+        function generateTextAuthorDelay() {
+            const code = `Dim texto, autor, segundos\ntexto = InputBox("Escreva o texto")\nautor = InputBox("Escreva o autor")\nsegundos = InputBox("Insira a quantidade de segundos")\n\nIf IsNumeric(segundos) Then\n    MsgBox texto & vbCrLf & autor\n    WScript.Sleep segundos * 1000\n    MsgBox texto & vbCrLf & autor\nElse\n    MsgBox "Por favor, insira um número válido para os segundos."\nEnd If\n`;
             appendToTextArea(code);
         }
 

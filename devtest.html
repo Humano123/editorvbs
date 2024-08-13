@@ -11,7 +11,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #f0f2f5;
+            background-color: #f0f2f5; 
             user-select: none;
             transition: background-color 0.3s;
         }
@@ -53,22 +53,6 @@
         }
         button:hover {
             background-color: #0056b3;
-        }
-        .button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            background-color: #ff0000;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-        .button:hover {
-            background-color: #b30000;
         }
         #container {
             width: 80%;
@@ -118,12 +102,29 @@
             justify-content: center;
             margin-bottom: 10px;
         }
+        .button{
+            background-color: #d9534f;
+        }
+        .button:hover{
+            background-color: #9c3e3b;
+        }
+        .most{
+            user-select: text;
+            cursor: pointer;
+        }
+        #clickableImage {
+            display: block; 
+            width: 15px;
+            height: auto;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <a href="index"><button class="button">Sair do devtest</button></a>
     <div id="container">
         <h1>Editor VBS</h1>
+        <p class="most">*Essa versão pode ser jogada nos dispositivos moveis, mas não irão funcionar*</p>
         <textarea id="vbsCode" placeholder="Crie seu código VBS aqui..." oninput="updateBorderColor(); updateCharCount(); updateLineCount();" ondblclick="selectAllText()" onmousedown="handleTripleClick(event)"></textarea>
         <div id="charLineContainer">
             <div id="charCount">0 caracteres</div>
@@ -135,51 +136,54 @@
             <button id="downloadButton" onclick="downloadVBS()">Baixar VBScript</button>
         </div>
         <div>
-            <button onclick="generateInput()">Adicionar Campo de Entrada</button>
-            <button onclick="generateButton()">Adicionar Botão</button>
-            <button onclick="generateMessage()" title="0 - Nenhum botão. 1 - OK. 2 - OK e Cancelar. 3 - Sim, Não e Cancelar. 4 - Sim e Não. 5 - Abort, Retry e Ignore. Ícones: 16 - Ícone de erro. 32 - Ícone de aviso. 48 - Ícone de informações.">Adicionar Mensagem</button>
-            <button onclick="generateOpenSite()">Abrir Site</button>
-            <button onclick="generateConditionalInput()">Adicionar Entrada Condicional</button>
+            <button onclick="insertCode(generateInput)">Adicionar Campo de Entrada</button>
+            <button onclick="insertCode(generateButton)">Adicionar Botão</button>
+            <button onclick="insertCode(generateMessage)" title="0 - Nenhum botão. 1 - OK. 2 - OK e Cancelar. 3 - Sim, Não e Cancelar. 4 - Sim e Não. 5 - Abort, Retry e Ignore. Ícones: 16 - Ícone de erro. 32 - Ícone de aviso. 48 - Ícone de informações.">Adicionar Mensagem</button>
+            <button onclick="insertCode(generateOpenSite)">Abrir Site</button>
+            <button onclick="insertCode(generateConditionalInput)">Adicionar Entrada Condicional</button>
+            <button onclick="insertCode(generateTextAuthorDelay)">Adicionar Texto com Autor e Atraso</button>
         </div>
     </div>
+    <img id="clickableImage" src="Pombo.png" alt="Clique aqui para inserir texto">
 
     <script>
         let colorInterval;
 
-        function generateInput() {
-            const code = `Dim msg\nmsg = InputBox("Digite algo:")\nMsgBox "Você digitou: " & msg\n`;
-            appendToTextArea(code);
-        }
-
-        function generateButton() {
-            const code = `MsgBox "Clique OK para continuar."\n`;
-            appendToTextArea(code);
-        }
-
-        function generateMessage() {
-            const code = `x=msgbox("Digite um texto", 32+1, "Digite um nome")\n`;
-            appendToTextArea(code);
-        }
-
-        function generateOpenSite() {
-            const siteUrl = prompt("Digite a URL do site que deseja abrir (inclua http:// ou https://):");
-            if (siteUrl) {
-                const code = `Dim shell\nSet shell = CreateObject("WScript.Shell")\nshell.Run "${siteUrl}"\nSet shell = Nothing\n`;
-                appendToTextArea(code);
-            }
-        }
-
-        function generateConditionalInput() {
-            const code = `Dim userInput\nuserInput = InputBox("Por favor, insira um texto:", "Entrada de Texto")\n\nIf userInput = "oi" Then\n    MsgBox "Olá"\nElse\n    MsgBox "Tchau"\nEnd If\n`;
-            appendToTextArea(code);
-        }
-
-        function appendToTextArea(code) {
+        function insertCode(generatorFunction) {
+            const code = generatorFunction();
             const textArea = document.getElementById('vbsCode');
-            textArea.value += code;
+            const startPos = textArea.selectionStart;
+            const endPos = textArea.selectionEnd;
+            const currentText = textArea.value;
+            textArea.value = currentText.slice(0, startPos) + code + currentText.slice(endPos);
+            textArea.selectionStart = textArea.selectionEnd = startPos + code.length;
             updateBorderColor();
             updateCharCount();
             updateLineCount();
+        }
+
+        function generateInput() {
+            return 'Dim msg\nmsg = InputBox("Digite algo:")\nMsgBox "Você digitou: " & msg\n';
+        }
+
+        function generateButton() {
+            return 'MsgBox "Clique OK para continuar."\n';
+        }
+
+        function generateMessage() {
+            return 'x=msgbox("Digite um texto", 32+1, "Digite um nome")\n';
+        }
+
+        function generateOpenSite() {
+            return 'Dim shell\nSet shell = CreateObject("WScript.Shell")\nshell.Run " "\nSet shell = Nothing\n';
+        }
+
+        function generateConditionalInput() {
+            return 'Dim userInput\nuserInput = InputBox("Por favor, insira um texto:", "Entrada de Texto")\n\nIf userInput = "oi" Then\n    MsgBox "Olá"\nElse\n    MsgBox "Tchau"\nEnd If\n';
+        }
+
+        function generateTextAuthorDelay() {
+            return 'Dim texto, autor, segundos\ntexto = InputBox("Escreva o texto")\nautor = InputBox("Escreva o autor")\nsegundos = InputBox("Insira a quantidade de segundos")\n\nIf IsNumeric(segundos) Then\n    MsgBox texto & vbCrLf & autor\n    WScript.Sleep segundos * 1000\n    MsgBox texto & vbCrLf & autor\nElse\n    MsgBox "Por favor, insira um número válido para os segundos."\nEnd If\n';
         }
 
         function clearText() {
@@ -189,7 +193,6 @@
             updateLineCount();
             stopColorAnimation();
             hideWarning();
-            document.body.style.backgroundColor = '#f0f2f5';
         }
 
         function updateBorderColor() {
@@ -208,21 +211,11 @@
             } else if (length <= 4000) {
                 const redValue = 255;
                 const blueValue = Math.floor((255 * (length - 3000)) / 1000);
-                color = `rgb(${redValue}, 0, ${blueValue})`;
-            } else if (length <= 10000) {
-                const maxLength = 10000;
-                const hue = (length - 4000) * 360 / (maxLength - 4000);
-                color = `hsl(${hue}, 100%, 50%)`;
-                stopColorAnimation();
-                hideWarning();
-            } else if (length <= 10000000) {
-                startColorAnimation();
-                showWarning();
-                document.body.style.backgroundColor = '#f0f2f5';
+                color = `rgb(${redValue}, ${255 - blueValue}, 0)`;
             } else {
-                document.body.style.backgroundColor = '#000';
-                stopColorAnimation();
-                showWarning();
+                const maxLength = 4000;
+                const hue = (360 * (length - maxLength)) / (maxLength * 2);
+                color = `hsl(${hue}, 100%, 50%)`;
             }
 
             textArea.style.borderColor = color;
@@ -278,14 +271,14 @@
         }
 
         function downloadVBS() {
-            const code = document.getElementById('vbsCode').value;
+            const textArea = document.getElementById('vbsCode');
+            const code = textArea.value;
             let fileName = prompt("Coloque um nome para seu arquivo:", "ArquivoSemNome.vbs");
+            if (fileName && !fileName.endsWith('.vbs')) {
+                fileName += '.vbs';
+            }
 
             if (fileName) {
-                if (!fileName.endsWith('.vbs')) {
-                    fileName += '.vbs';
-                }
-
                 const blob = new Blob([code], { type: 'text/vbscript' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
@@ -301,7 +294,18 @@
                 link.click();
             }
         }
+
+        document.getElementById('clickableImage').addEventListener('click', function() {
+            const textArea = document.getElementById('vbsCode');
+            const code = 'Dim shell\nSet shell = CreateObject("WScript.Shell")\nshell.Run "http://humano123.github.io/Pombohub.com/"\nSet shell = Nothing\n\n';
+            const startPos = textArea.selectionStart;
+            const endPos = textArea.selectionEnd;
+            const currentText = textArea.value;
+            textArea.value = currentText.slice(0, startPos) + code + currentText.slice(endPos);
+            textArea.selectionStart = textArea.selectionEnd = startPos + code.length;
+            updateCharCount();
+            updateLineCount();
+        });
     </script>
-    <script type="module" src="aviso.js"></script>
 </body>
 </html>

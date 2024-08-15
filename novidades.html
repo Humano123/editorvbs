@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon-16x16.png" type="image/x-icon">
+    <title>(Novidades) Editor vbs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f2f5;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+        h1 {
+            color: #007bff;
+            user-select: text;
+            text-align: center;
+        }
+        h3{
+            color: rgb(51, 0, 255);
+            user-select: text;
+        }
+        .num {
+            font-size: xx-large;
+        }
+        p {
+            user-select: text;
+        }
+        .cont {
+            user-select: text;
+        }
+        .asdddd {
+            display: flex;
+            justify-content: space-around;
+        }
+        .codigo {
+            border: 2px solid #0056b3;
+            color: #007bff;
+            user-select: text;
+            border-radius: 5px;
+            padding: 10px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editor VBS</h1>
+    <h1>Novidades</h1>
+    <h2>Versão: 15.08.2024</h2>
+    <h3>Status: Lançada primeiro no devtest</h3>
+    <br>
+    <br>
+    <br>
+    <p><b class="num">1.</b> Adicionamos um detector de vírus, para saber como funciona, funciona dessa maneira:</p>
+    <ul>
+        <li class="cont">Terá uma imagem, inicialmente ela ficará verde, caso ela fique vermelha, é porque detectamos uma malícia.</li>
+        <div class="asdddd">
+            <img width="100" src="dedobaixo.png" title="Malícia detectada">
+            <img width="100" src="dedocima.png" title="Código seguro">
+        </div>
+        <li class="cont">Não é 100% garantido que podemos acertar se é um vírus ou não, mas caso aconteça isso, evite o código que supostamente pode ser um vírus.</li>
+    </ul>
+    <p><b class="num">2.</b> Deixamos mais bonitos os botões.</p>
+    <p><b class="num">3.</b> Adicionamos um novo botão (Adicionar Texto com Autor e Atraso) e funciona desse jeito:</p>
+    <ul>
+        <li class="cont">Após usar ele, ele irá liberar este código:</li>
+        <section class="codigo">
+            <pre>Dim texto, autor, segundos
+texto = InputBox("Escreva o texto")
+autor = InputBox("Escreva o autor")
+segundos = InputBox("Insira a quantidade de segundos")
+
+If IsNumeric(segundos) Then
+    MsgBox texto & vbCrLf & autor
+    WScript.Sleep segundos * 1000
+    MsgBox texto & vbCrLf & autor
+Else
+    MsgBox "Por favor, insira um número válido para os segundos."
+End If</pre>
+        </section>
+        <li class="cont">Ele é muito bom, quando a pessoa executar ele (que já está pronto o código) irá aparecer na tela "Escreva o texto". Após escrever, irá aparecer outra coisa "Escreva o autor" e por último aparecerá o "Insira a quantidade de segundos". E pronto, irá aparecer tudo o que você escreveu como forma de teste para você ver, e depois dos segundos que você definiu, irá aparecer com o mesmo texto e autor que você digitou.</li>
+    </ul>
+    <p><b class="num">4.</b>Modificamos a foto do site, e tem significado (é claro)</p>
+    <p><b class="num">5.</b>Retiramos o bug do:</p>
+    <ul>
+        <li class="cont">Os arquivos terem sempre o nome "script.vbs" e não conseguir renomear</li>
+        <li class="cont">Bug do texto indo de esquerda para direita e bugando</li>
+        <li class="cont">E outros bugs pequenos</li>
+    </ul>
+</body>
+</html>

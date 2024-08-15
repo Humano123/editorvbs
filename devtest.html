@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon-16x16.png" type="image/x-icon">
     <title>(DevTest) Editor vbs</title>
     <style>
         body {
@@ -102,21 +103,49 @@
             justify-content: center;
             margin-bottom: 10px;
         }
-        .button{
-            background-color: #d9534f;
-        }
-        .button:hover{
-            background-color: #9c3e3b;
-        }
-        .most{
+        .most {
             user-select: text;
             cursor: pointer;
         }
-        #clickableImage {
+        #statusImage {
             display: block; 
-            width: 15px;
+            margin: 20px auto;
+            width: 150px;
             height: auto;
-            cursor: pointer;
+        }
+        .asd {
+            padding: 10px 20px;
+            border: 2px solid #007bff; /* Define a borda com 2px de espessura e cor azul */
+            border-radius: 5px; /* Opcional: arredonda os cantos da borda */
+            background-color: #ffffff; /* Cor de fundo do botão */
+            color: #007bff; /* Cor do texto do botão */
+            font-size: 16px; /* Tamanho da fonte do texto */
+            cursor: pointer; /* Muda o cursor para uma mão ao passar sobre o botão */
+        }
+        
+        .asd:hover {
+            background-color: #007bff; /* Altera a cor de fundo quando o botão é hover */
+            color: #ffffff; /* Altera a cor do texto quando o botão é hover */
+        }
+
+        .asd:focus{
+            transition: border 0.2s ease-in-out;
+            border: solid black;
+        }
+        .button {
+            background-color: #d9534f;
+        }
+        .button:hover {
+            background-color: #9c3e3b;
+        }
+        
+        .asdd{
+            background-color: #555;
+        }
+        .asdd:hover{
+            background-color: #ffffff;
+            color: black;
+            border: 2px solid rgb(0, 0, 0);
         }
     </style>
 </head>
@@ -125,30 +154,28 @@
     <div id="container">
         <h1>Editor VBS</h1>
         <p class="most">*Essa versão pode ser jogada nos dispositivos moveis, mas não irão funcionar*</p>
-        <textarea id="vbsCode" placeholder="Crie seu código VBS aqui..." oninput="updateBorderColor(); updateCharCount(); updateLineCount();" ondblclick="selectAllText()" onmousedown="handleTripleClick(event)"></textarea>
+        <textarea id="vbsCode" placeholder="Crie seu código VBS aqui..." oninput="updateBorderColor(); updateCharCount(); updateLineCount(); checkForVirus();" ondblclick="selectAllText()" onmousedown="handleTripleClick(event)"></textarea>
         <div id="charLineContainer">
             <div id="charCount">0 caracteres</div>
-            <div id="lineCount">1 linha</div>
+            <div id="lineCount">1 linhas</div>
         </div>
         <div id="warning">Cuidado, isso pode prejudicar seu computador/celular/etc</div>
         <div class="top-buttons">
-            <button onclick="clearText()">Limpar Texto</button>
-            <button id="downloadButton" onclick="downloadVBS()">Baixar VBScript</button>
+            <button class="asdd" onclick="clearText()">Limpar Texto</button>
+            <button class="asdd" id="downloadButton" onclick="downloadVBS()">Baixar VBScript</button>
         </div>
         <div>
-            <button onclick="insertCode(generateInput)">Adicionar Campo de Entrada</button>
-            <button onclick="insertCode(generateButton)">Adicionar Botão</button>
-            <button onclick="insertCode(generateMessage)" title="0 - Nenhum botão. 1 - OK. 2 - OK e Cancelar. 3 - Sim, Não e Cancelar. 4 - Sim e Não. 5 - Abort, Retry e Ignore. Ícones: 16 - Ícone de erro. 32 - Ícone de aviso. 48 - Ícone de informações.">Adicionar Mensagem</button>
-            <button onclick="insertCode(generateOpenSite)">Abrir Site</button>
-            <button onclick="insertCode(generateConditionalInput)">Adicionar Entrada Condicional</button>
-            <button onclick="insertCode(generateTextAuthorDelay)">Adicionar Texto com Autor e Atraso</button>
+            <button class="asd" onclick="insertCode(generateInput)">Adicionar Campo de Entrada</button>
+            <button class="asd" onclick="insertCode(generateButton)">Adicionar Botão</button>
+            <button class="asd" onclick="insertCode(generateMessage)" title="0 - Nenhum botão. 1 - OK. 2 - OK e Cancelar. 3 - Sim, Não e Cancelar. 4 - Sim e Não. 5 - Abort, Retry e Ignore. Ícones: 16 - Ícone de erro. 32 - Ícone de aviso. 48 - Ícone de informações.">Adicionar Mensagem</button>
+            <button class="asd" onclick="insertCode(generateOpenSite)">Abrir Site</button>
+            <button class="asd" onclick="insertCode(generateConditionalInput)">Adicionar Entrada Condicional</button>
+            <button class="asd" onclick="insertCode(generateTextAuthorDelay)">Adicionar Texto com Autor e Atraso</button>
         </div>
+        <img id="statusImage" src="dedocima.png" alt="Imagem de Status da Segurança" ondragstart="return false">
     </div>
-    <img id="clickableImage" src="Pombo.png" alt="Clique aqui para inserir texto">
 
     <script>
-        let colorInterval;
-
         function insertCode(generatorFunction) {
             const code = generatorFunction();
             const textArea = document.getElementById('vbsCode');
@@ -160,6 +187,7 @@
             updateBorderColor();
             updateCharCount();
             updateLineCount();
+            checkForVirus();
         }
 
         function generateInput() {
@@ -191,75 +219,34 @@
             updateBorderColor();
             updateCharCount();
             updateLineCount();
-            stopColorAnimation();
             hideWarning();
+            resetStatusImage();
         }
 
         function updateBorderColor() {
             const textArea = document.getElementById('vbsCode');
             const length = textArea.value.length;
-            let color;
-
-            if (length <= 2000) {
-                const blueValue = 255;
-                const greenValue = Math.floor((255 * length) / 2000);
-                color = `rgb(0, ${greenValue}, ${blueValue})`;
-            } else if (length <= 3000) {
-                const greenValue = 255;
-                const redValue = Math.floor((255 * (length - 2000)) / 1000);
-                color = `rgb(${redValue}, ${greenValue}, ${255 - redValue})`;
-            } else if (length <= 4000) {
-                const redValue = 255;
-                const blueValue = Math.floor((255 * (length - 3000)) / 1000);
-                color = `rgb(${redValue}, ${255 - blueValue}, 0)`;
+            if (length === 0) {
+                textArea.style.borderColor = '#007bff';
+            } else if (length > 0 && length <= 50) {
+                textArea.style.borderColor = '#00ff00'; 
+            } else if (length > 50 && length <= 100) {
+                textArea.style.borderColor = '#ffcc00'; 
             } else {
-                const maxLength = 4000;
-                const hue = (360 * (length - maxLength)) / (maxLength * 2);
-                color = `hsl(${hue}, 100%, 50%)`;
+                textArea.style.borderColor = '#ff0000'; 
             }
-
-            textArea.style.borderColor = color;
         }
 
         function updateCharCount() {
             const textArea = document.getElementById('vbsCode');
-            const length = textArea.value.length;
-            document.getElementById('charCount').textContent = `${length} caracteres`;
+            const charCount = textArea.value.length;
+            document.getElementById('charCount').innerText = `${charCount} caracteres`;
         }
 
         function updateLineCount() {
             const textArea = document.getElementById('vbsCode');
-            const lines = textArea.value.split('\n').length;
-            document.getElementById('lineCount').textContent = `${lines} linha${lines > 1 ? 's' : ''}`;
-        }
-
-        function selectAllText() {
-            const textArea = document.getElementById('vbsCode');
-            textArea.select();
-        }
-
-        function handleTripleClick(event) {
-            if (event.detail === 3) {
-                selectAllText();
-                event.preventDefault();
-            }
-        }
-
-        function startColorAnimation() {
-            const textArea = document.getElementById('vbsCode');
-            let hue = 0;
-
-            colorInterval = setInterval(() => {
-                hue = (hue + 10) % 360;
-                textArea.style.borderColor = `hsl(${hue}, 100%, 50%)`;
-            }, 500);
-        }
-
-        function stopColorAnimation() {
-            if (colorInterval) {
-                clearInterval(colorInterval);
-                colorInterval = null;
-            }
+            const lineCount = textArea.value.split('\n').length;
+            document.getElementById('lineCount').innerText = `${lineCount} linhas`;
         }
 
         function showWarning() {
@@ -270,42 +257,65 @@
             document.getElementById('warning').style.display = 'none';
         }
 
-        function downloadVBS() {
+        function stopColorAnimation() {
+            const image = document.getElementById('statusImage');
+            image.classList.remove('bounce');
+        }
+
+        function selectAllText() {
             const textArea = document.getElementById('vbsCode');
-            const code = textArea.value;
-            let fileName = prompt("Coloque um nome para seu arquivo:", "ArquivoSemNome.vbs");
-            if (fileName && !fileName.endsWith('.vbs')) {
-                fileName += '.vbs';
-            }
+            textArea.select();
+        }
 
-            if (fileName) {
-                const blob = new Blob([code], { type: 'text/vbscript' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = fileName;
-
-                const downloadButton = document.getElementById('downloadButton');
-                downloadButton.classList.add('bounce');
-
-                downloadButton.addEventListener('animationend', () => {
-                    downloadButton.classList.remove('bounce');
-                });
-
-                link.click();
+        function handleTripleClick(event) {
+            const textArea = document.getElementById('vbsCode');
+            if (event.detail === 3) {
+                textArea.select();
             }
         }
 
-        document.getElementById('clickableImage').addEventListener('click', function() {
+        function downloadVBS() {
             const textArea = document.getElementById('vbsCode');
-            const code = 'Dim shell\nSet shell = CreateObject("WScript.Shell")\nshell.Run "http://humano123.github.io/Pombohub.com/"\nSet shell = Nothing\n\n';
-            const startPos = textArea.selectionStart;
-            const endPos = textArea.selectionEnd;
-            const currentText = textArea.value;
-            textArea.value = currentText.slice(0, startPos) + code + currentText.slice(endPos);
-            textArea.selectionStart = textArea.selectionEnd = startPos + code.length;
-            updateCharCount();
-            updateLineCount();
-        });
+            const code = textArea.value;
+
+            const fileName = prompt("Por favor, insira o nome do arquivo:", "script.vbs");
+            if (fileName === null || fileName.trim() === "") {
+                alert("Operação cancelada. Nome do arquivo não pode estar vazio.");
+                return;
+            }
+
+            const blob = new Blob([code], { type: 'text/vbscript' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName.endsWith('.vbs') ? fileName : `${fileName}.vbs`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function checkForVirus() {
+            const textArea = document.getElementById('vbsCode');
+            const code = textArea.value.toLowerCase();
+            const virusKeywords = ['wscript.shell', 'shellexecute', 'shutdown', 'deletefile', 'killprocess', 'dangerouscommand'];
+            const containsVirus = virusKeywords.some(keyword => code.includes(keyword));
+
+            const statusImage = document.getElementById('statusImage');
+
+            if (containsVirus) {
+                showWarning();
+                statusImage.src = 'dedobaixo.png'; // Muda para a imagem de alerta
+            } else {
+                hideWarning();
+                statusImage.src = 'dedocima.png'; // Retorna à imagem padrão
+            }
+        }
+
+        function resetStatusImage() {
+            const statusImage = document.getElementById('statusImage');
+            statusImage.src = 'dedocima.png'; // Retorna à imagem padrão
+        }
     </script>
 </body>
 </html>

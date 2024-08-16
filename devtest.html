@@ -63,6 +63,19 @@
         h1 {
             color: #007bff;
             user-select: text;
+            margin: 0;
+        }
+        h6 {
+            color: #555;
+            margin: 0;
+        }
+        .apenas {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 20px;
         }
         .bounce {
             animation: bounce 1s ease;
@@ -115,17 +128,17 @@
         }
         .asd {
             padding: 10px 20px;
-            border: 2px solid #007bff; /* Define a borda com 2px de espessura e cor azul */
-            border-radius: 5px; /* Opcional: arredonda os cantos da borda */
-            background-color: #ffffff; /* Cor de fundo do botão */
-            color: #007bff; /* Cor do texto do botão */
-            font-size: 16px; /* Tamanho da fonte do texto */
-            cursor: pointer; /* Muda o cursor para uma mão ao passar sobre o botão */
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background-color: #ffffff;
+            color: #007bff;
+            font-size: 16px;
+            cursor: pointer;
         }
         
         .asd:hover {
-            background-color: #007bff; /* Altera a cor de fundo quando o botão é hover */
-            color: #ffffff; /* Altera a cor do texto quando o botão é hover */
+            background-color: #007bff;
+            color: #ffffff;
         }
 
         .asd:focus{
@@ -147,12 +160,18 @@
             color: black;
             border: 2px solid rgb(0, 0, 0);
         }
+        .apenas{
+            display: flex;
+        }
     </style>
 </head>
 <body>
     <a href="index"><button class="button">Sair do devtest</button></a>
     <div id="container">
-        <h1>Editor VBS</h1>
+        <div class="apenas">
+            <h1>Editor VBS</h1>
+            <h6 title="Versão de devtest">16.08.2024</h6>
+        </div>
         <p class="most">*Essa versão pode ser jogada nos dispositivos moveis, mas não irão funcionar*</p>
         <textarea id="vbsCode" placeholder="Crie seu código VBS aqui..." oninput="updateBorderColor(); updateCharCount(); updateLineCount(); checkForVirus();" ondblclick="selectAllText()" onmousedown="handleTripleClick(event)"></textarea>
         <div id="charLineContainer">
@@ -278,7 +297,7 @@
             const textArea = document.getElementById('vbsCode');
             const code = textArea.value;
 
-            const fileName = prompt("Por favor, insira o nome do arquivo:", "script.vbs");
+            const fileName = prompt("Por favor, insira o nome do arquivo:", "Arquivo sem nome.vbs");
             if (fileName === null || fileName.trim() === "") {
                 alert("Operação cancelada. Nome do arquivo não pode estar vazio.");
                 return;
@@ -305,16 +324,16 @@
 
             if (containsVirus) {
                 showWarning();
-                statusImage.src = 'dedobaixo.png'; // Muda para a imagem de alerta
+                statusImage.src = 'dedobaixo.png';
             } else {
                 hideWarning();
-                statusImage.src = 'dedocima.png'; // Retorna à imagem padrão
+                statusImage.src = 'dedocima.png';
             }
         }
 
         function resetStatusImage() {
             const statusImage = document.getElementById('statusImage');
-            statusImage.src = 'dedocima.png'; // Retorna à imagem padrão
+            statusImage.src = 'dedocima.png';
         }
     </script>
 </body>

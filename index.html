@@ -1,328 +1,103 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(Menu) Editor VBS</title>
     <link rel="shortcut icon" href="favicon-16x16.png" type="image/x-icon">
-    <title>Editor vbs</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f0f2f5; 
-            user-select: none;
-            transition: background-color 0.3s;
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        #vbsCode {
-            width: 80%;
-            height: 300px;
-            border: 2px solid #007bff;
-            border-radius: 8px;
-            padding: 10px;
-            background-image: url(a.png);
-            background-repeat: repeat;
-            background-attachment: fixed;
-            margin-bottom: 10px;
-            overflow: auto;
+        body{
             font-family: Arial, Helvetica, sans-serif;
-            font-weight: 900;
-            font-size: 20px;
-            color: #333;
-            transition: border-color 0.3s;
-            user-select: text;
-            resize: vertical;
+            background-color: aliceblue;
         }
-        #vbsCode:focus {
-            border-color: #0056b3;
-            outline: none;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            background-color: #007bff;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #container {
-            width: 80%;
-            max-width: 1200px;
-            text-align: center;
-        }
-        h1 {
-            color: #007bff;
-            user-select: text;
-            margin: 0;
-        }
-        h6 {
-            color: #555;
-            margin: 0;
-        }
-        .apenas {
+        nav{
+            background-color: rgb(42, 44, 47);
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin-bottom: 20px;
+            height: 10vmax;
         }
-        .bounce {
-            animation: bounce 1s ease;
+        .avi{
+            color: #007bff;
+            margin-top: 4vmax;
+            margin-left: 2vmax;
+            font-size: 2vmax;
         }
-        @keyframes bounce {
+        .logotipo{
+            width: 7vmax;
+            height: 7.6vmax;
+            margin-top: 1vmax;
+            animation: Girar 2s linear infinite;
+            user-select: none;
+        }
+        @keyframes Girar{
             0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
+                transform: rotate(0deg);
             }
             100% {
-                transform: translateY(0);
+                transform: rotate(360deg);
             }
         }
-        #charCount, #lineCount {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #555;
-        }
-        #charLineContainer {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        #warning {
-            display: none;
-            margin-top: 10px;
-            font-size: 16px;
-            color: #d9534f;
-            background-color: #f2dede;
-            border: 1px solid #ebccd1;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .top-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        #statusImage {
-            display: block; 
-            margin: 20px auto;
-            width: 150px;
-            height: auto;
-        }
-        .asd {
+        .botaodeentrada {
             padding: 10px 20px;
             border: 2px solid #007bff;
             border-radius: 5px;
-            background-color: #ffffff;
+            background-color: transparent;
             color: #007bff;
             font-size: 16px;
             cursor: pointer;
+            transition: all 0.5s ease-in-out;
         }
         
-        .asd:hover {
+        .botaodeentrada:hover {
             background-color: #007bff;
             color: #ffffff;
         }
 
-        .asd:focus{
-            transition: border 0.2s ease-in-out;
-            border: solid black;
+        .botaodeentradadev {
+            border: 0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #d9534f;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.5s ease-in-out;
         }
-        
-        .asdd{
-            background-color: #555;
+
+        .botaodeentradadev:hover {
+            background-color: #a03e3b;
+            color: #ffffff;
         }
-        .asdd:hover{
-            background-color: #ffffff;
-            color: black;
-            border: 2px solid rgb(0, 0, 0);
+
+        .graca{
+            color: #007bff;
         }
-        .apenas{
-            display: flex;
+        .printdosite{
+            width: 1000px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            box-shadow: 10px 10px 10px;
+            user-select: none;
+            margin-top: 2vmax;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div class="apenas">
-            <h1>Editor VBS</h1>
-            <h6 title="Versão atual">16.08.2024</h6>
-        </div>
-        <textarea id="vbsCode" placeholder="Crie seu código VBS aqui..." oninput="updateBorderColor(); updateCharCount(); updateLineCount(); checkForVirus();" ondblclick="selectAllText()" onmousedown="handleTripleClick(event)"></textarea>
-        <div id="charLineContainer">
-            <div id="charCount">0 caracteres</div>
-            <div id="lineCount">1 linhas</div>
-        </div>
-        <div id="warning">Cuidado, isso pode prejudicar seu computador/celular/etc</div>
-        <div class="top-buttons">
-            <button class="asdd" onclick="clearText()">Limpar Texto</button>
-            <button class="asdd" id="downloadButton" onclick="downloadVBS()">Baixar VBScript</button>
-        </div>
-        <div>
-            <button class="asd" onclick="insertCode(generateInput)">Adicionar Campo de Entrada</button>
-            <button class="asd" onclick="insertCode(generateButton)">Adicionar Botão</button>
-            <button class="asd" onclick="insertCode(generateMessage)" title="0 - Nenhum botão. 1 - OK. 2 - OK e Cancelar. 3 - Sim, Não e Cancelar. 4 - Sim e Não. 5 - Abort, Retry e Ignore. Ícones: 16 - Ícone de erro. 32 - Ícone de aviso. 48 - Ícone de informações.">Adicionar Mensagem</button>
-            <button class="asd" onclick="insertCode(generateOpenSite)">Abrir Site</button>
-            <button class="asd" onclick="insertCode(generateConditionalInput)">Adicionar Entrada Condicional</button>
-            <button class="asd" onclick="insertCode(generateTextAuthorDelay)">Adicionar Texto com Autor e Atraso</button>
-        </div>
-        <img id="statusImage" src="dedocima.png" alt="Imagem de Status da Segurança" ondragstart="return false">
-    </div>
-
-    <script>
-        function insertCode(generatorFunction) {
-            const code = generatorFunction();
-            const textArea = document.getElementById('vbsCode');
-            const startPos = textArea.selectionStart;
-            const endPos = textArea.selectionEnd;
-            const currentText = textArea.value;
-            textArea.value = currentText.slice(0, startPos) + code + currentText.slice(endPos);
-            textArea.selectionStart = textArea.selectionEnd = startPos + code.length;
-            updateBorderColor();
-            updateCharCount();
-            updateLineCount();
-            checkForVirus();
-        }
-
-        function generateInput() {
-            return 'Dim msg\nmsg = InputBox("Digite algo:")\nMsgBox "Você digitou: " & msg\n';
-        }
-
-        function generateButton() {
-            return 'MsgBox "Clique OK para continuar."\n';
-        }
-
-        function generateMessage() {
-            return 'x=msgbox("Digite um texto", 32+1, "Digite um nome")\n';
-        }
-
-        function generateOpenSite() {
-            return 'Dim shell\nSet shell = CreateObject("WScript.Shell")\nshell.Run " "\nSet shell = Nothing\n';
-        }
-
-        function generateConditionalInput() {
-            return 'Dim userInput\nuserInput = InputBox("Por favor, insira um texto:", "Entrada de Texto")\n\nIf userInput = "oi" Then\n    MsgBox "Olá"\nElse\n    MsgBox "Tchau"\nEnd If\n';
-        }
-
-        function generateTextAuthorDelay() {
-            return 'Dim texto, autor, segundos\ntexto = InputBox("Escreva o texto")\nautor = InputBox("Escreva o autor")\nsegundos = InputBox("Insira a quantidade de segundos")\n\nIf IsNumeric(segundos) Then\n    MsgBox texto & vbCrLf & autor\n    WScript.Sleep segundos * 1000\n    MsgBox texto & vbCrLf & autor\nElse\n    MsgBox "Por favor, insira um número válido para os segundos."\nEnd If\n';
-        }
-
-        function clearText() {
-            document.getElementById('vbsCode').value = '';
-            updateBorderColor();
-            updateCharCount();
-            updateLineCount();
-            hideWarning();
-            resetStatusImage();
-        }
-
-        function updateBorderColor() {
-            const textArea = document.getElementById('vbsCode');
-            const length = textArea.value.length;
-            if (length === 0) {
-                textArea.style.borderColor = '#007bff';
-            } else if (length > 0 && length <= 50) {
-                textArea.style.borderColor = '#00ff00'; 
-            } else if (length > 50 && length <= 100) {
-                textArea.style.borderColor = '#ffcc00'; 
-            } else {
-                textArea.style.borderColor = '#ff0000'; 
-            }
-        }
-
-        function updateCharCount() {
-            const textArea = document.getElementById('vbsCode');
-            const charCount = textArea.value.length;
-            document.getElementById('charCount').innerText = `${charCount} caracteres`;
-        }
-
-        function updateLineCount() {
-            const textArea = document.getElementById('vbsCode');
-            const lineCount = textArea.value.split('\n').length;
-            document.getElementById('lineCount').innerText = `${lineCount} linhas`;
-        }
-
-        function showWarning() {
-            document.getElementById('warning').style.display = 'block';
-        }
-
-        function hideWarning() {
-            document.getElementById('warning').style.display = 'none';
-        }
-
-        function stopColorAnimation() {
-            const image = document.getElementById('statusImage');
-            image.classList.remove('bounce');
-        }
-
-        function selectAllText() {
-            const textArea = document.getElementById('vbsCode');
-            textArea.select();
-        }
-
-        function handleTripleClick(event) {
-            const textArea = document.getElementById('vbsCode');
-            if (event.detail === 3) {
-                textArea.select();
-            }
-        }
-
-        function downloadVBS() {
-            const textArea = document.getElementById('vbsCode');
-            const code = textArea.value;
-
-            const fileName = prompt("Por favor, insira o nome do arquivo:", "Arquivo sem nome.vbs");
-            if (fileName === null || fileName.trim() === "") {
-                alert("Operação cancelada. Nome do arquivo não pode estar vazio.");
-                return;
-            }
-
-            const blob = new Blob([code], { type: 'text/vbscript' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = fileName.endsWith('.vbs') ? fileName : `${fileName}.vbs`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function checkForVirus() {
-            const textArea = document.getElementById('vbsCode');
-            const code = textArea.value.toLowerCase();
-            const virusKeywords = ['wscript.shell', 'shellexecute', 'shutdown', 'deletefile', 'killprocess', 'dangerouscommand'];
-            const containsVirus = virusKeywords.some(keyword => code.includes(keyword));
-
-            const statusImage = document.getElementById('statusImage');
-
-            if (containsVirus) {
-                showWarning();
-                statusImage.src = 'dedobaixo.png';
-            } else {
-                hideWarning();
-                statusImage.src = 'dedocima.png';
-            }
-        }
-
-        function resetStatusImage() {
-            const statusImage = document.getElementById('statusImage');
-            statusImage.src = 'dedocima.png';
-        }
-    </script>
+    <nav>
+        <a href="https://discord.gg/2rX3J568hV" target="_blank"><img class="logotipo" src="normal.png" ondragstart="return false"></a>
+        <h1 class="avi">Edite com ajuda usando <b class="editorvbs">editor vbs</b></h1>
+        <h4>Vou contar um segredinho para você... o devtest e a parte normal é GRÁTIS</h4>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <a href="editor"><input class="botaodeentrada" type="button" value="Começar"></a>
+    <a href="devtest"><input class="botaodeentradadev" type="button" value="Começar com atualização futura (devtest)"></a>
+    <h2>Está sem dinheiro? relaxe, é de <b class="graca">graça</b></h2>
+    <img class="printdosite" src="Printdosite.png" ondragstart="return false">
 </body>
 </html>

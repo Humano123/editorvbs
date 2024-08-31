@@ -50,52 +50,100 @@
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+        .meme {
+            animation: Girar 0.5s linear infinite;
+            width: 100px;
+        }
+        @keyframes Girar {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .meme:hover {
+            animation: GirarRapido 0.001s linear infinite;
+        }
+        @keyframes GirarRapido {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
     <h1>Editor VBS</h1>
     <h1>Novidades</h1>
-    <h2>Versão: 14.08.2024 (atual)</h2>
-    <h2>Versão da atualização: 16.08.2024</h2>
-    <h3>Status: Apenas no devtest</h3>
+    <h2>Versão: 28.08.2024/31.08.2024 (atual)</h2>
+    <h3>Status: Lançada</h3>
     <br>
     <br>
     <br>
-    <p><b class="num">1.</b> Adicionamos um detector de vírus, para saber como funciona, funciona dessa maneira:</p>
-    <ul>
-        <li class="cont">Terá uma imagem, inicialmente ela ficará verde, caso ela fique vermelha, é porque detectamos uma malícia.</li>
-        <div class="asdddd">
-            <img width="100" src="dedobaixo.png" title="Malícia detectada">
-            <img width="100" src="dedocima.png" title="Código seguro">
-        </div>
-        <li class="cont">Não é 100% garantido que podemos acertar se é um vírus ou não, mas caso aconteça isso, evite o código que supostamente pode ser um vírus.</li>
-    </ul>
+    <p><b class="num">1.</b> Removemos o detector de virus.</p>
     <p><b class="num">2.</b> Deixamos mais bonitos os botões.</p>
-    <p><b class="num">3.</b> Adicionamos um novo botão (Adicionar Texto com Autor e Atraso) e funciona desse jeito:</p>
+    <p><b class="num">3.</b> Adicionamos um novo botão (Portaria) e funciona desse jeito:</p>
     <ul>
         <li class="cont">Após usar ele, ele irá liberar este código:</li>
         <section class="codigo">
-            <pre>Dim texto, autor, segundos
-texto = InputBox("Escreva o texto")
-autor = InputBox("Escreva o autor")
-segundos = InputBox("Insira a quantidade de segundos")
-
-If IsNumeric(segundos) Then
-    MsgBox texto & vbCrLf & autor
-    WScript.Sleep segundos * 1000
-    MsgBox texto & vbCrLf & autor
-Else
-    MsgBox "Por favor, insira um número válido para os segundos."
-End If</pre>
+            <pre>Option Explicit
+                Dim nomesPermitidos
+                nomesPermitidos = Array("CARLA", "JOÃO", "MARIA", "ANA", "PEDRO")
+                Function RemoveAcentos(str)
+                Dim acentos, semAcentos, i
+                acentos = Array("Á", "À", "Â", "Ã", "Ä", "É", "È", "Ê", "Ë", "Í", "Ì", "Î", "Ï", "Ó", "Ò", "Ô", "Õ", "Ö", "Ú", "Ù", "Û", "Ü", "Ç", "á", "à", "â", "ã", "ä", "é", "è", "ê", "ë", "í", "ì", "î", "ï", "ó", "ò", "ô", "õ", "ö", "ú", "ù", "û", "ü", "ç")
+                semAcentos = Array("A", "A", "A", "A", "A", "E", "E", "E", "E", "I", "I", "I", "I", "O", "O", "O", "O", "O", "U", "U", "U", "U", "C", "a", "a", "a", "a", "a", "e", "e", "e", "e", "i", "i", "i", "i", "o", "o", "o", "o", "o", "u", "u", "u", "u", "c")
+                For i = 0 To UBound(acentos)
+                    str = Replace(str, acentos(i), semAcentos(i))
+                Next
+                RemoveAcentos = str
+                End Function
+                Function NomePermitido(nome)
+                Dim nomeNormalizado, i
+                nomeNormalizado = UCase(RemoveAcentos(nome))
+                For i = 0 To UBound(nomesPermitidos)
+                If nomeNormalizado = nomesPermitidos(i) Then
+                NomePermitido = True
+                Exit Function
+                End If
+                Next
+                NomePermitido = False
+                End Function
+                Dim nomeUsuario
+                nomeUsuario = InputBox("Digite seu nome:")
+                If NomePermitido(nomeUsuario) Then
+                MsgBox "Entrada permitida!"
+                Else
+                MsgBox "Entrada não permitida!"
+                End If
+                </pre>
         </section>
-        <li class="cont">Ele é muito bom, quando a pessoa executar ele (que já está pronto o código) irá aparecer na tela "Escreva o texto". Após escrever, irá aparecer outra coisa "Escreva o autor" e por último aparecerá o "Insira a quantidade de segundos". E pronto, irá aparecer tudo o que você escreveu como forma de teste para você ver, e depois dos segundos que você definiu, irá aparecer com o mesmo texto e autor que você digitou.</li>
+        <li class="cont">Ele é muito bom, ele funciona como se fosse uma portaria mesmo, a pessoa coloca o nome dela e vê se libera ou não, independente se ela(e) escreveu maisculo minusculo, vai entender que o nome da pessoa está correto, então irá falar que a entrada foi permitida, caso contrario, irá falar que a entrada foi negada.<li>
     </ul>
-    <p><b class="num">4.</b>Modificamos a foto do site, e tem significado (é claro)</p>
+    <p><b class="num">4.</b>Adicionamos o <a href="index">menu</a></p>
     <p><b class="num">5.</b>Retiramos o bug do:</p>
     <ul>
-        <li class="cont">Os arquivos terem sempre o nome "script.vbs" e não conseguir renomear</li>
-        <li class="cont">Bug do texto indo de esquerda para direita e bugando</li>
+        <li class="cont">Texto gigante em baixo do site (codigo corrompido)</li>
+        <li class="cont">Modo claro não funcionando</li>
+        <li class="cont">Alguns botões não funcionando</li>
         <li class="cont">E outros bugs pequenos</li>
     </ul>
+    <p><b class="num">6.</b>Atualizamos a configuração de anti-mobile, que não funcionava, e apartir de agora funciona (menos para devtest).</p>
+    <p><b class="num">7.</b>Deixamos a logotipo do site mais bonito (com mascote)</p>
+    <img class="meme" src="normal.png" ondragstart="return false">
+    <p><b class="num">8.</b>Na atualização de 31.08.2024, deixamos o editor bonito (muito bonito)</p>
+    <p><b class="num">9.</b>Ajeitamos o bug: </p>
+    <ul>
+        <li class="cont">O botão "Portaria" não funcionando, pois havia um erro na linha 9 e caractere 255</li>
+        <li class="cont">Modo escuro não funcionando novamente</li>
+        <li class="cont">Bug do textarea que era todo torto</li>
+        <li class="cont">Bug do botão de baixar o codigo que abaixava automaticamente (sem que a pessoa possa escolher o nome do arquivo)</li>
+        <li class="cont">Entre outros bugs pequenos...</li>
+    </ul>
+    <p><b class="num">10.</b>Adionamos uma nova funcionalidade, a funcionalidade TAB, para simular a inserção de quatro espaços</p>
+
 </body>
 </html>
